@@ -38,9 +38,16 @@ def face_up(obj,normal, up=mu.Vector((0,0,1))):
 
 
 
+
 if __name__ == '__main__':
     import bpy
     import random
     obj = bpy.context.active_object 
     face_up(obj,random.choice(face_normals))
-    rotate_object(None,None)
+    #rotate_object(None,None)
+
+    def handle_face_rotation(scene):
+        obj = scene.objects['rotater']
+        face_up(obj,face_normals[scene.frame_current-1])
+    
+    bpy.app.handlers.frame_change_post.append(handle_face_rotation)
