@@ -37,7 +37,12 @@ def face_up(obj,normal, up=mu.Vector((0,0,1))):
     obj.matrix_world = identMat@mat
 
 
-
+roll_map = {
+        6:1,18:2,2:3,16:4,
+        14:5,12:6,8:7,15:8,9:9,
+        4:10,10:11,5:12,7:13,11:14,
+        17:15,3:16,13:17,19:18,1:19
+    }
 
 if __name__ == '__main__':
     import bpy
@@ -48,6 +53,6 @@ if __name__ == '__main__':
 
     def handle_face_rotation(scene):
         obj = scene.objects['rotater']
-        face_up(obj,face_normals[scene.frame_current-1])
+        face_up(obj,face_normals[roll_map[scene.frame_current]])
     
     bpy.app.handlers.frame_change_post.append(handle_face_rotation)
