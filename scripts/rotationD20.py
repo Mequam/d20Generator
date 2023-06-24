@@ -44,6 +44,22 @@ roll_map = {
         17:15,3:16,13:17,19:18,1:19
     }
 
+#this function ensures that the given number on the given d20 is rotated to be face up
+def d20_face_up(d20,
+                face,
+                roll_map=roll_map,
+                normals=face_normals,
+                up=mu.Vector((0,0,1))
+                ):
+    idx = face - 1
+    if idx in roll_map:
+        idx = roll_map[idx]
+    face_up(d20,face_normals[idx],up)
+    
+
+
+
+
 if __name__ == '__main__':
     import bpy
     import random
@@ -53,6 +69,7 @@ if __name__ == '__main__':
 
     def handle_face_rotation(scene):
         obj = scene.objects['rotater']
-        face_up(obj,face_normals[roll_map[scene.frame_current]])
+        d20_face_up(obj,scene.frame_current)
     
     bpy.app.handlers.frame_change_post.append(handle_face_rotation)
+    face_up(obj,face_normals[0])
