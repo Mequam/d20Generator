@@ -67,6 +67,7 @@ def randomize_font():
 
     shader_material.node_tree.nodes['Image Texture'].image = uv_texture
     shader_material.node_tree.nodes['Image Texture.003'].image = normal_texture 
+
 def generateBiasUnif(start,end,bias=1):
     ret_val = 0
     for i in range(bias):
@@ -111,7 +112,7 @@ def randomize_dice_shader():
     background_color = get_random_color()
     splash_color = get_random_color()
     mat.node_tree.nodes['MainColor'].outputs['Color'].default_value = background_color
-    mat.node_tree.nodes['SplashColor'].outputs['Color'].default_value = splash_color
+    mat.node_tree.nodes['SplashColor'].outputs['Color'].default_value = splash_color if random.uniform(0,1) < .5 else background_color
     mat.node_tree.nodes['TextColor'].outputs['Color'].default_value = generate_readable_color([background_color,splash_color])
 
 
@@ -141,6 +142,23 @@ def randomize_dice_shader():
         mat.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value = random.uniform(0,1)
         print("misc dice")
 
+def randomize_floor_shader():
+    obj = bpy.context.scene.objects["floor"]
+    mat = obj.material_slots[0].material 
+    elements = mat.node_tree.nodes['Color Ramp'].color_ramp.elements 
+    stepSize = 1/len(elements)
+    for i in range(len(elements)):
+        elements[i].color = get_random_color()
+        x = generateBiasUnif(0,stepSize,2)+stepSize*i
+        elements[i].position = x if x <= 1.0 else 1.0
+
+
+    vornoliTexture = mat.node_tree.nodes['RandText']
+    vornoliTexture.inputs['Randomness'].default_value = random.uniform(0,1)
+    vornoliTexture.inputs['Scale'].default_value = random.uniform(0,50)
+
+    mat.node_tree.nodes['Principled BSDF'].inputs['Roughness'].default_value = random.uniform(0,1)
+    mat.node_tree.nodes['Principled BSDF'].inputs['Metallic'].default_value = random.uniform(0.5,1)
 
 
 #use a main function,
@@ -150,6 +168,7 @@ def main():
     randomize_rotation("Camera")
     randomize_rotation("Light",(4,4,1))
     randomize_dice_shader()
+    randomize_floor_shader()
 
 if __name__ == '__main__':
     main()
