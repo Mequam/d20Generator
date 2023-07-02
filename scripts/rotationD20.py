@@ -73,3 +73,4 @@ if __name__ == '__main__':
     
     bpy.app.handlers.frame_change_post.append(handle_face_rotation)
     face_up(obj,face_normals[0])
+    print("rotating d20!")
